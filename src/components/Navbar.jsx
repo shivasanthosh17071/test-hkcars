@@ -6,14 +6,17 @@ import { Menu, X, User, LogOut } from "lucide-react";
 import HKLOGO from "../assets/HKLOGO.png";
 
 const quotes = [
-  "Your journey begins where the road takes you — rent the drive, own the freedom.",
-  "Freedom is just a rental away. Explore more, worry less.",
-  "Drive what moves you. Rent luxury, comfort, and confidence.",
-  "Turn the key to adventure — rent your perfect ride today.",
-  "Life’s too short to drive boring cars. Choose the ride that defines your journey.",
-  "The best views come after the smoothest drives. Rent smarter, travel better.",
-  "From city lights to mountain heights, we’ve got the car for your story.",
+  "Start your journey from LB Nagar — where every rental opens a new road to explore.",
+  "Vanastalipuram to Vikarabad — rent your drive and own your weekend getaway.",
+  "From Boduppal to Banjara Hills, we put the keys to freedom in your hands.",
+  "Your perfect ride is waiting at LB Nagar. All that’s missing is your destination.",
+  "Planning a long drive? Vanastalipuram branch is just the beginning of your escape.",
+  "Boduppal to Araku Valley — make memories one smooth drive at a time.",
+  "Charminar, Chilkur or the coast — our LB Nagar cars take you where maps end and memories begin.",
+  "Rent from Vanastalipuram and experience Hyderabad like never before — comfortably and conveniently.",
+  "From Boduppal streets to Telangana retreats — drive the experience with HK Car Rentals.",
 ];
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -151,7 +154,7 @@ const Navbar = () => {
                     <li className="nav-item" key={index}>
                       <Link
                         className={`nav-link px-3 py-2 ${
-                          isActive(path) ? "active text-primary fw-bold" : ""
+                          isActive(path) ? "active text-dark fw-bold" : ""
                         }`}
                         to={path}
                         onClick={() => setIsOpen(false)}
@@ -169,7 +172,7 @@ const Navbar = () => {
                     <Link
                       className={`nav-link d-flex align-items-center ${
                         isActive("/account")
-                          ? "active text-primary fw-bold"
+                          ? "active text-dark fw-bold"
                           : ""
                       }`}
                       to="/account"
@@ -181,7 +184,7 @@ const Navbar = () => {
                   </li>
                   <li className="nav-item">
                     <button
-                      className="btn btn-outline-danger d-flex align-items-center"
+                      className="btn text-danger logout-btn d-flex align-items-center"
                       onClick={() => setShowLogoutModal(true)}
                     >
                       <LogOut size={16} className="me-1" />
@@ -192,7 +195,7 @@ const Navbar = () => {
               ) : (
                 <li className="nav-item">
                   <Link
-                    className="btn btn-primary d-flex align-items-center px-3"
+                    className="btn text-success d-flex align-items-center px-3"
                     to="/login"
                     onClick={() => setIsOpen(false)}
                   >

@@ -8,6 +8,10 @@ import {
   Clock,
   MessageCircle,
   Send,
+  Award,
+  Users,
+  TrendingUp,
+  ShieldCheck,
 } from "lucide-react";
 import Requirements from "./Requirements";
 
@@ -27,33 +31,27 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Format message
-  const message = `New Client Inquiry:
+    const message = `New Client Inquiry:
 Name: ${formData.name}
 Email: ${formData.email}
 Phone: ${formData.phone}
 Subject: ${formData.subject}
 Message: ${formData.message}`;
 
-  // WhatsApp API
-  const phoneNumber = "91603879248"; // Use international format without +
-  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    const phoneNumber = "91603879248";
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
 
-  // Open WhatsApp chat
-  window.open(url, "_blank");
-
-  // Optional: Reset form and show success
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  setSubmitted(true);
-  setIsSubmitting(false);
-  setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-  setTimeout(() => setSubmitted(false), 40000);
-};
-
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setSubmitted(true);
+    setIsSubmitting(false);
+    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+    setTimeout(() => setSubmitted(false), 40000);
+  };
 
   const handleWhatsAppClick = () => {
     const message = "Hi! I'd like to know more about HK Self Drive Cars.";
@@ -64,19 +62,20 @@ Message: ${formData.message}`;
 
   return (
     <div className="fade-in mt-4">
-      {/* Hero Section */}
-      <section className="bg-primary text-white py-5">
+      {/* Hero / Overview */}
+      <section className="bg-dark text-white py-5">
         <div className="container text-center">
-          <h1 className="display-4 fw-bold mb-3">
-            HK Self-Driving Car Rentals
-          </h1>
+          <h1 className="display-4 fw-bold mb-2 text-light" >HK Car Rentals</h1>
+          <p className="lead mb-2">
+            "Unlock the freedom to explore. Rent a car and embark on your journey."
+          </p>
           <p className="lead mb-0">
-            Car rentals made easy — doorstep delivery, 24/7 support, flexible plans.
+            Drive the experience. Your adventure begins with a rental car.
           </p>
         </div>
       </section>
 
-      {/* Contact Info + Form */}
+      {/* Main Section */}
       <section className="py-5">
         <div className="container">
           <div className="row">
@@ -88,9 +87,8 @@ Message: ${formData.message}`;
                 </div>
                 <div className="card-body">
                   {submitted && (
-                    <div className="alert alert-success" role="alert">
-                      <strong>Thank you!</strong> Your message has been sent
-                      successfully. We'll get back to you shortly.
+                    <div className="alert alert-success">
+                      <strong>Thank you!</strong> We'll get back to you shortly.
                     </div>
                   )}
                   <form onSubmit={handleSubmit}>
@@ -118,7 +116,6 @@ Message: ${formData.message}`;
                         />
                       </div>
                     </div>
-
                     <div className="row mb-3">
                       <div className="col-md-6">
                         <label className="form-label">Phone Number</label>
@@ -148,7 +145,6 @@ Message: ${formData.message}`;
                         </select>
                       </div>
                     </div>
-
                     <div className="mb-4">
                       <label className="form-label">Message *</label>
                       <textarea
@@ -161,12 +157,7 @@ Message: ${formData.message}`;
                         required
                       ></textarea>
                     </div>
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      disabled={isSubmitting}
-                    >
+                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                       {isSubmitting ? (
                         <>
                           <span className="spinner-border spinner-border-sm me-2" />
@@ -188,88 +179,104 @@ Message: ${formData.message}`;
             <div className="col-lg-4">
               <div className="card shadow-sm mb-4">
                 <div className="card-body">
-                  <h5 className="card-title">Contact & Support</h5>
+                  <h5>Contact & Support</h5>
                   <div className="d-flex align-items-center mb-3">
-                    <Phone size={20} className="text-primary me-3" />
+                    <Phone className="text-primary me-3" size={20} />
                     <div>
                       <div className="fw-bold">Phone</div>
-                      <a href="tel:+919603879248" className="text-decoration-none">
-                        +91 96038 79248
-                      </a>
-                      <br />
-                      <a href="tel:+917981592802" className="text-decoration-none">
-                        +91 79815 92802
-                      </a>
+                      <a href="tel:+919603879248">+91 96038 79248</a><br />
+                      <a href="tel:+917981592802">+91 79815 92802</a>
                     </div>
                   </div>
                   <div className="d-flex align-items-center mb-3">
-                    <Mail size={20} className="text-primary me-3" />
+                    <Mail className="text-primary me-3" size={20} />
                     <div>
                       <div className="fw-bold">Email</div>
-                      <a href="mailto:hkselfdrivecars1122@gmail.com" className="text-decoration-none">
+                      <a href="mailto:hkselfdrivecars1122@gmail.com">
                         hkselfdrivecars1122@gmail.com
                       </a>
                     </div>
                   </div>
                   <div className="d-flex align-items-start mb-3">
-                    <MapPin size={20} className="text-primary me-3 mt-1" />
+                    <MapPin className="text-primary me-3 mt-1" size={20} />
                     <div>
                       <div className="fw-bold">Service Areas</div>
-                      <div className="text-muted">
-                        Boduppal • Vanasthalipuram • Dilsukhnagar
-                      </div>
+                      Boduppal • Vanasthalipuram • Dilsukhnagar
                     </div>
                   </div>
                   <div className="d-flex align-items-center mb-3">
-                    <Clock size={20} className="text-primary me-3" />
+                    <Clock className="text-primary me-3" size={20} />
                     <div>
                       <div className="fw-bold">Hours</div>
-                      <div className="text-muted">24 hours (Support 24/7)</div>
+                      24/7 Availability
                     </div>
                   </div>
-                  <button
-                    className="btn btn-success w-100"
-                    onClick={handleWhatsAppClick}
-                  >
-                    <MessageCircle size={16} className="me-2" />
+                  <button className="btn btn-success w-100" onClick={handleWhatsAppClick}>
+                    <MessageCircle className="me-2" size={16} />
                     Chat on WhatsApp
                   </button>
                 </div>
               </div>
-
               <div className="card shadow-sm">
                 <div className="card-body">
-                  <h6 className="card-title">Quick Response</h6>
-                  <p className="card-text small text-muted">
-                    For emergencies, contact +91 63000 98395. Regular queries responded within ~15 minutes.
+                  <h6>Quick Response</h6>
+                  <p className="small text-muted">
+                    For emergencies, call <strong>+91 63000 98395</strong>.
+                    General queries answered within ~15 minutes.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Services & Booking Summary */}
+          {/* Company Info Section */}
           <div className="row mt-5">
             <div className="col-md-12">
-              <div className="card p-4 shadow-sm">
-                <h5>About HK Self‑Driving Car Rentals</h5>
+              <div className="card shadow-sm p-4">
+                <h4 className="mb-3">About HK Car Rentals</h4>
                 <p>
-                  Established recently, HK Self‑Drive Cars offers flexible rental
-                  options across Boduppal, Vanasthalipuram, and Dilsukhnagar.
-                  Choose from hatchbacks, sedans, SUVs, and EVs. Rentals available
-                  hourly, daily, weekly, or monthly. Add-ons include GPS, baby seats,
-                  insurance, fuel options, and chauffeur services. We also offer
-                  doorstep delivery and pickup.
+                  <strong>HK Car Rentals</strong> is one of the top-rated self-drive car rental services in Hyderabad,
+                  founded in 2019 by <strong>Tharun</strong>. Our mission is to provide safe, flexible, and
+                  budget-friendly travel options to customers who value independence.
+                </p>
+                <p>
+                  We offer a wide selection of vehicles — hatchbacks, sedans, SUVs — with flexible rental durations and 24/7 support.
+                  Book easily online, enjoy doorstep delivery, and experience a hassle-free journey.
+                </p>
+                <h5 className="mt-4">Our Mission</h5>
+                <p>
+                  To make travel easy and independent by providing clean, safe, and affordable self-drive cars with great customer service.
                 </p>
 
-                <Requirements/>
+                <h5 className="mt-4">Our Vision</h5>
+                <p>
+                  To become South India’s most trusted self-drive car rental brand, offering the best experience in service, value, and convenience.
+                </p>
+
+                <div className="row text-center mt-4">
+                  <div className="col-md-4">
+                    <Users className="text-success mb-2" size={32} />
+                    <h6>50,000+ Happy Customers</h6>
+                  </div>
+                  <div className="col-md-4">
+                    <TrendingUp className="text-warning mb-2" size={32} />
+                    <h6>100+ Vehicles in Fleet</h6>
+                  </div>
+                  <div className="col-md-4">
+                    <ShieldCheck className="text-primary mb-2" size={32} />
+                    <h6>99% Customer Satisfaction</h6>
+                  </div>
+                </div>
+
+                {/* Rental Requirements Component */}
+                <div className="mt-5">
+                  <Requirements />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-   
     </div>
   );
 };

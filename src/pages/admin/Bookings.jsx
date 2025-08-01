@@ -9,10 +9,10 @@ import {
   XCircle,
   Filter,
   Search,
+  ArrowLeft,
 } from "lucide-react";
 import axios from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 const Bookings = () => {
@@ -25,11 +25,16 @@ const Bookings = () => {
     sort: "",
   });
   const [loading, setLoading] = useState(true);
-
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [modalData, setModalData] = useState({});
   const [showModal, setShowModal] = useState(false);
+
   const token = localStorage.getItem("adminToken");
+
+  useEffect(() => {
+    if (!token) navigate("/");
+  }, [token, navigate]);
+
   useEffect(() => {
     axios
       .get("/bookings", {
@@ -80,9 +85,10 @@ const Bookings = () => {
   const openModal = (booking) => {
     setSelectedBooking(booking);
     setModalData({
-      status: booking.status,
+      status: booking.status || "",
       pickupLocation: booking.pickupLocation || "",
       gasTankReading: booking.gasTankReading || "",
+      notes: booking.notes || "",
     });
     setShowModal(true);
   };
@@ -100,12 +106,10 @@ const Bookings = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Optimistically update state
       const updated = bookings.map((b) =>
         b._id === selectedBooking._id ? { ...b, ...modalData } : b
       );
       setBookings(updated);
-
       closeModal();
     } catch (error) {
       console.error("Error updating booking:", error);
@@ -113,15 +117,17 @@ const Bookings = () => {
   };
 
   return (
-    <div className=" m-2 m-md-4 py-4" style={{ minHeight: "700px" }}>
+    <div className="m-2 m-md-4 py-4" style={{ minHeight: "700px" }}>
       <button
-        className="btn  mb-2 d-flex align-items-center"
+        className="btn mb-2 d-flex align-items-center"
         onClick={() => navigate("/admin/dashboard")}
       >
         <ArrowLeft size={18} className="me-2" />
         Back
-      </button>{" "}
+      </button>
+
       <h2 className="mb-4">All Bookings</h2>
+
       {/* Filters */}
       <div className="d-flex flex-wrap gap-3 align-items-center mb-4">
         <div className="input-group w-auto">
@@ -167,6 +173,7 @@ const Bookings = () => {
           </select>
         </div>
       </div>
+
       {/* Bookings Table */}
       {loading ? (
         <LoadingSpinner />
@@ -215,6 +222,7 @@ const Bookings = () => {
           </table>
         </div>
       )}
+
       {/* Modal */}
       {selectedBooking && (
         <Modal show={showModal} onHide={closeModal} size="lg">
@@ -223,8 +231,12 @@ const Bookings = () => {
           </Modal.Header>
           <Modal.Body>
             <div className="row">
+              {/* Booking Details */}
               {Object.entries(selectedBooking).map(([key, value]) => {
-                if (["_id", "__v", "createdAt", "updatedAt"].includes(key))
+                if (
+                  ["_id", "__v", "createdAt", "updatedAt"].includes(key) ||
+                  ["status", "pickupLocation", "gasTankReading", "notes"].includes(key)
+                )
                   return null;
                 return (
                   <div className="col-md-6 mb-3" key={key}>
@@ -234,6 +246,7 @@ const Bookings = () => {
                 );
               })}
 
+              {/* Editable Fields */}
               <div className="col-md-6 mb-3">
                 <label>Status</label>
                 <select
@@ -274,6 +287,17 @@ const Bookings = () => {
                   <option value="1/2">½</option>
                   <option value="1/4">¼</option>
                 </select>
+              </div>
+
+              <div className="col-md-12 mb-3">
+                <label>Notes</label>
+                <textarea
+                  name="notes"
+                  rows={3}
+                  className="form-control"
+                  value={modalData.notes}
+                  onChange={handleModalChange}
+                />
               </div>
             </div>
           </Modal.Body>

@@ -1,76 +1,58 @@
-import { Shield, Award, Users, Clock, Car, CheckCircle } from "lucide-react";
-import Requirements from "./Requirements";
+import { Shield, Award, Users, Clock, CheckCircle, Star, Car } from "lucide-react";
 
 const About = () => {
-  const features = [
-    {
-      icon: <Shield size={40} className="text-primary mb-3" />,
-      title: "Fully Insured",
-      description:
-        "All our vehicles come with comprehensive insurance coverage for complete peace of mind.",
-    },
-    {
-      icon: <Award size={40} className="text-primary mb-3" />,
-      title: "Best Quality",
-      description:
-        "We maintain our fleet to the highest standards with regular servicing and quality checks.",
-    },
-    {
-      icon: <Users size={40} className="text-primary mb-3" />,
-      title: "24/7 Support",
-      description:
-        "Our customer support team is available round the clock to assist you whenever needed.",
-    },
-    {
-      icon: <Clock size={40} className="text-primary mb-3" />,
-      title: "Flexible Timing",
-      description:
-        "Pick up and drop off your car at your convenience with our flexible timing options.",
-    },
+  const stats = [
+    { number: "50,000+", label: "Happy Customers" },
+    { number: "100+", label: "Cars in Fleet" },
+    { number: "2019", label: "Year Established" },
+    { number: "99%", label: "Customer Satisfaction" },
   ];
 
-  const stats = [
-    { number: "500+", label: "Happy Customers" },
-    { number: "50+", label: "Cars Available" },
-    { number: "5+", label: "Years Experience" },
-    { number: "24/7", label: "Customer Support" },
+  const values = [
+    { title: "Transparency", desc: "No hidden charges, clear pricing, and honest communication." },
+    { title: "Quality", desc: "Well-maintained vehicles and exceptional service standards." },
+    { title: "Customer First", desc: "Your satisfaction and safety are our top priorities." },
+    { title: "Innovation", desc: "Continuously improving our services with the latest technology." },
   ];
 
   return (
     <div className="fade-in">
       {/* Hero Section */}
-      <section className="gradient-bg text-white py-5">
+      <section className="py-5 text-white" style={{ background: "linear-gradient(135deg, var(--primary-color), var(--primary-light))" }}>
+        <div className="container text-center">
+          <h1 className="display-4 fw-bold mb-3">HK Car Rentals</h1>
+          <p className="lead mb-3 fst-italic">
+            "Unlock the freedom to explore. Rent a car and embark on your journey."<br />
+            "Drive the experience. Your adventure begins with a rental car."
+          </p>
+          <p className="fw-medium">Trusted self-drive car rental services since 2019.</p>
+        </div>
+      </section>
+
+      {/* Company Overview */}
+      <section className="py-5 bg-light">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <h1 className="display-4 fw-bold mb-4">About DriveEasy</h1>
-              <p className="text-dark mb-4">
-                We are passionate about providing the best self-drive car rental
-                experience. Our mission is to make car rentals simple,
-                affordable, and accessible to everyone.
-              </p>
-              <div className="d-flex align-items-center">
-                
-                <p className="text-dark">Your trusted partner for self-drive adventures</p>
-              </div>
-            </div>
-            <div className="col-lg-6 text-center">
-              <img
-                src="/placeholder.svg?height=400&width=500&text=About+Us+Image"
-                alt="About Us"
-                className="img-fluid rounded"
-              />
-            </div>
-          </div>
+          <h2 className="fw-bold mb-4">Company Overview</h2>
+          <p>
+            <strong>HK Car Rentals</strong> is one of the best self-drive car rental services in Hyderabad,
+            offering a wide selection of well-maintained vehicles for local and outstation travel.
+            Whether you're planning a short city ride or a long road trip, our fleet includes hatchbacks,
+            sedans, and SUVs to match your needs and budget.
+          </p>
+          <p>
+            What makes us unique is our focus on <strong>customer convenience</strong> — with simple online booking,
+            affordable pricing, 24/7 support, and flexible rental options. At HK Car Rentals,
+            we don’t just rent cars — we deliver freedom, flexibility, and a great travel experience.
+          </p>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-5 bg-light">
+      <section className="py-5">
         <div className="container">
           <div className="row text-center">
-            {stats.map((stat, index) => (
-              <div key={index} className="col-lg-3 col-md-6 mb-4">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="col-lg-3 col-md-6 mb-4">
                 <div className="h2 text-primary fw-bold">{stat.number}</div>
                 <div className="text-muted">{stat.label}</div>
               </div>
@@ -79,42 +61,69 @@ const About = () => {
         </div>
       </section>
 
-    {/* Services & Booking Summary */}
-          <div className="row m-1 m-md-4 ">
-            <div className="col-md-12">
-              <div className="card p-4 shadow-sm">
-                <h5>About HK Self‑Driving Car Rentals</h5>
-                <p>
-                  Established recently, HK Self‑Drive Cars offers flexible rental
-                  options across Boduppal, Vanasthalipuram, and Dilsukhnagar.
-                  Choose from hatchbacks, sedans, SUVs, and EVs. Rentals available
-                  hourly, daily, weekly, or monthly. Add-ons include GPS, baby seats,
-                  insurance, fuel options, and chauffeur services. We also offer
-                  doorstep delivery and pickup.
-                </p>
+      {/* Mission & Vision */}
+      <section className="py-5 bg-light">
+        <div className="container">
+          <h2 className="fw-bold mb-4">Mission & Vision</h2>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <h5 className="text-primary">Our Mission</h5>
+              <p>
+                To make travel easy and independent by providing clean, safe, and affordable
+                self-drive cars with great customer service.
+              </p>
+            </div>
+            <div className="col-md-6 mb-3">
+              <h5 className="text-primary">Our Vision</h5>
+              <p>
+                To become South India’s most trusted self-drive car rental brand,
+                offering the best experience in terms of service, value, and convenience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                <Requirements/>
+      {/* Founder Section */}
+      <section className="py-5">
+        <div className="container">
+          <h2 className="fw-bold mb-4">Meet the Founder</h2>
+          <div className="card shadow-sm border-0 p-4">
+            <div className="d-flex align-items-center">
+              <div
+                className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4"
+                style={{ width: 70, height: 70, fontSize: 28, fontWeight: "bold" }}
+              >
+                T
+              </div>
+              <div>
+                <h5 className="mb-1">Tharun</h5>
+                <p className="mb-2 text-muted">Founder, HK Car Rentals</p>
+                <p className="mb-0">
+                  Tharun started HK Car Rentals with a clear vision — to offer safe, flexible,
+                  and budget-friendly travel options to people who want to explore on their own.
+                  With a strong background in customer service and a passion for mobility,
+                  he has built HK Car Rentals into a brand known for trust and quality.
+                </p>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-      {/* Features Section */}
+      {/* Values Section */}
       <section className="py-5 bg-light">
         <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">Why Choose Us?</h2>
-            <p className="lead text-muted">
-              We provide exceptional service with these key benefits
-            </p>
-          </div>
-
+          <h2 className="fw-bold mb-4 text-center">Our Core Values</h2>
           <div className="row">
-            {features.map((feature, index) => (
-              <div key={index} className="col-lg-3 col-md-6 mb-4">
-                <div className="text-center h-100 p-4">
-                  {feature.icon}
-                  <h5 className="fw-bold">{feature.title}</h5>
-                  <p className="text-muted">{feature.description}</p>
+            {values.map((val, idx) => (
+              <div key={idx} className="col-md-6 mb-4">
+                <div className="d-flex">
+                  <CheckCircle size={24} className="text-success me-3 mt-1" />
+                  <div>
+                    <h6 className="fw-semibold mb-1">{val.title}</h6>
+                    <p className="text-muted mb-0">{val.desc}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -122,139 +131,17 @@ const About = () => {
         </div>
       </section>
 
-      {/* Values Section */}
+      {/* Achievements */}
       <section className="py-5">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-6">
-              <img
-                src="/placeholder.svg?height=400&width=500&text=Our+Values+Image"
-                alt="Our Values"
-                className="img-fluid rounded"
-              />
-            </div>
-            <div className="col-lg-6">
-              <h2 className="mb-4">Our Values</h2>
-              <div className="mb-3">
-                <div className="d-flex align-items-start">
-                  <CheckCircle size={20} className="text-success me-3 mt-1" />
-                  <div>
-                    <h6>Transparency</h6>
-                    <p className="text-muted">
-                      No hidden charges, clear pricing, and honest
-                      communication.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-3">
-                <div className="d-flex align-items-start">
-                  <CheckCircle size={20} className="text-success me-3 mt-1" />
-                  <div>
-                    <h6>Quality</h6>
-                    <p className="text-muted">
-                      Well-maintained vehicles and exceptional service
-                      standards.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-3">
-                <div className="d-flex align-items-start">
-                  <CheckCircle size={20} className="text-success me-3 mt-1" />
-                  <div>
-                    <h6>Customer First</h6>
-                    <p className="text-muted">
-                      Your satisfaction and safety are our top priorities.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-3">
-                <div className="d-flex align-items-start">
-                  <CheckCircle size={20} className="text-success me-3 mt-1" />
-                  <div>
-                    <h6>Innovation</h6>
-                    <p className="text-muted">
-                      Continuously improving our services with latest
-                      technology.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h2 className="fw-bold mb-4 text-center">Milestones & Achievements</h2>
+          <ul className="list-unstyled fs-5">
+            <li className="mb-2">✅ Served over <strong>50,000+</strong> happy customers since 2019</li>
+            <li className="mb-2">🚗 Grew the fleet to <strong>100+</strong> vehicles</li>
+            <li className="mb-2">⭐ Achieved a <strong>99%</strong> customer satisfaction rate</li>
+          </ul>
         </div>
       </section>
-
-      {/* Team Section */}
-      <section className="py-5 bg-light">
-        <div className="container">
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold">Meet Our Team</h2>
-            <p className="lead text-muted">
-              The people behind DriveEasy's success
-            </p>
-          </div>
-
-          <div className="row justify-content-center">
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="card text-center">
-                <div className="card-body">
-                  <div
-                    className="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      fontSize: "32px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    T
-                  </div>
-                  <h5>Tharun</h5>
-                  <p className="text-muted">Founder & CEO</p>
-                  <p className="small">
-                    Passionate about revolutionizing the car rental industry
-                    with customer-centric solutions.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="card text-center">
-                <div className="card-body">
-                  <div
-                    className="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      fontSize: "32px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    PS
-                  </div>
-                  <h5>Nikhil Reddy</h5>
-                  <p className="text-muted">Operations Manager</p>
-                  <p className="small">
-                    Ensures smooth operations and maintains our high service
-                    quality standards.
-                  </p>
-                </div>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-          {/* Embedded Map */}
-    <div className="w-75 w-md-50 mx-auto mt-5">
-      <div className="ratio ratio-16x9">
-        <iframe src="https://www.google.com/maps/d/embed?mid=17fbX4YkoS9QBlfRMP-Ww3w0Dt48WwaA&ehbc=2E312F" width="60" height="80"></iframe>
-      </div>
-    </div>
-      </section>
-      
     </div>
   );
 };

@@ -275,7 +275,7 @@ const Footer = () => {
                 href="https://santhoshdev.space"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gradient text-decoration-none"
+                className="text-white text-decoration-none"
               >
                 Shiva Santhosh Reddy
               </a>

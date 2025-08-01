@@ -1,65 +1,103 @@
-import { useState, useEffect } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
-  Play,
-} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, ArrowRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./main.css";
 
 const slides = [
   {
     id: 1,
-    title: "Explore Premium Cars",
-    subtitle: "Drive with Style and Comfort",
+    title: "Evening Rides at Hyderabad Road",
+    subtitle: "Hyderabad’s Most Romantic Route",
     description:
-      "Discover a range of luxury and performance vehicles designed for an unforgettable driving experience.",
-    image: "https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg",
-    cta: "Browse Cars",
+      "Take your special one for a smooth sunset drive around Necklace Road, Tank Bund, or Jubilee Hills.",
+    image: "https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg",
+    cta: "Find Date Night Cars",
     ctaLink: "/cars",
-    features: ["Luxury Interiors", "Top Performance", "Advanced Safety"],
+    features: ["LED Headlights", "Luxury Interiors", "Sunroof Options"],
   },
   {
     id: 2,
-    title: "SUVs for Every Terrain",
-    subtitle: "Power Meets Versatility",
+    title: "Trips from Hyderabad to Srisailam",
+    subtitle: "Perfect for Long Weekend Getaways",
     description:
-      "Whether it's city streets or rugged trails, our SUV lineup is built to handle every journey.",
-    image: "https://images.pexels.com/photos/593172/pexels-photo-593172.jpeg",
-    cta: "Explore SUVs",
+      "Plan long drives from Hyderabad to scenic destinations like Srisailam, Nagarjuna Sagar, or Ananthagiri Hills.",
+    image:
+      "https://plus.unsplash.com/premium_photo-1749756289802-f4d113c0b8ef?q=80&w=1075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    cta: "Book Long Trip Cars",
     ctaLink: "/cars",
-    features: ["All-Wheel Drive", "Spacious Interiors", "Modern Tech"],
+    features: ["Spacious SUVs", "Great Mileage", "Smooth Highway Performance"],
   },
   {
     id: 3,
-    title: "Unleash Performance",
-    subtitle: "Sports Cars Collection",
+    title: "Stylish Rides from Boduppal",
+    subtitle: "Perfect for City to Suburb Drives",
     description:
-      "Experience the thrill of high-speed driving with our exclusive lineup of sports cars.",
+      "Choose stylish hatchbacks or sedans for daily drives across Boduppal, Uppal, and Keesara.",
     image: "https://images.pexels.com/photos/326259/pexels-photo-326259.jpeg",
-    cta: "View Sports Cars",
+    cta: "Browse Hatchbacks",
     ctaLink: "/cars",
-    features: ["High Horsepower", "Aerodynamic Design", "Precision Handling"],
+    features: ["Sleek Design", "Bluetooth Audio", "Affordable Rentals"],
+  },
+  {
+    id: 4,
+    title: "City Drives in Dilsukhnagar",
+    subtitle: "Navigate with Comfort",
+    description:
+      "Drive through Dilsukhnagar’s busy lanes in compact, efficient cars made for Hyderabad traffic.",
+    image: "https://images.pexels.com/photos/707046/pexels-photo-707046.jpeg",
+    cta: "View City Cars",
+    ctaLink: "/cars",
+    features: ["Easy City Parking", "Fuel Efficient", "AC Comfort"],
   },
 ];
 
-
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 50000); // Reduced for better UX
+    }, 22000);
     return () => clearInterval(timer);
   }, []);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const prevSlide = () =>
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    handleSwipe();
+  };
+
+  const handleSwipe = () => {
+    if (
+      touchStartX.current !== null &&
+      touchEndX.current !== null &&
+      Math.abs(touchStartX.current - touchEndX.current) > 50
+    ) {
+      if (touchStartX.current > touchEndX.current) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   return (
-    <section className="hero-carousel">
+    <section
+      className="hero-carousel bg-dark overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -69,8 +107,6 @@ export default function HeroCarousel() {
 
           <div className="hero-content-wrapper">
             <div className="hero-content">
-              {/* <h5 className="text-secondary">{slide.subtitle}</h5> */}
-              
               <h1 className="text-white">{slide.title}</h1>
               <p>{slide.description}</p>
 
@@ -101,16 +137,6 @@ export default function HeroCarousel() {
       <button className="hero-nav-arrow right" onClick={nextSlide}>
         <ChevronRight size={24} />
       </button>
-
-      <div className="hero-indicators">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`indicator ${index === currentSlide ? "active" : ""}`}
-          ></button>
-        ))}
-      </div>
     </section>
   );
 }

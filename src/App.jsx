@@ -60,27 +60,18 @@ function App() {
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route
-              path="/admin/add-car"
-              element={
-                <ProtectedRoute>
-                  <AddCar />
-                </ProtectedRoute>
-              }
+              path="/admin/add-car" element={  <AddCar />     }
             />
             <Route
               path="/admin/edit-car/:id"
-              element={
-                <ProtectedRoute>
-                  <EditCar />
-                </ProtectedRoute>
-              }
+              element={   <EditCar />}
             />
             <Route
               path="/admin/bookings"
               element={
-                <ProtectedRoute>
+              
                   <Bookings />
-                </ProtectedRoute>
+               
               }
             />
 

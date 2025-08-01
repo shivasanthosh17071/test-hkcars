@@ -87,7 +87,6 @@ const BookCar = () => {
         customerEmail: user.email || "",
       }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -99,7 +98,7 @@ const BookCar = () => {
         });
         setCar(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
         alert("Failed to load car details.");
       } finally {
         setIsLoading(false);
@@ -123,6 +122,13 @@ const BookCar = () => {
     [car?.price, totalDays]
   );
 
+  const isFutureDate = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateStr);
+    return inputDate >= today;
+  };
+
   const isCurrentStepValid = () => {
     switch (step) {
       case 0:
@@ -131,63 +137,69 @@ const BookCar = () => {
         return formData.address && formData.city && formData.state;
       case 2:
         return formData.driverLicenseNumber && formData.dateOfBirth;
-      case 3:
+      case 3: {
+        const pickup = new Date(`${formData.pickupDate}T${formData.pickupTime}`);
+        const ret = new Date(`${formData.returnDate}T${formData.returnTime}`);
         return (
           formData.pickupDate &&
           formData.returnDate &&
           formData.pickupTime &&
-          formData.returnTime
+          formData.returnTime &&
+          isFutureDate(formData.pickupDate) &&
+          isFutureDate(formData.returnDate) &&
+          ret > pickup
         );
+      }
       default:
         return true;
     }
   };
 
   const nextStep = () => {
-    if (!isCurrentStepValid()) return alert("Please complete this section.");
+    if (!isCurrentStepValid()) return alert("Please complete this section with valid dates.");
     setStep((prev) => Math.min(prev + 1, 4));
   };
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const bookingData = {
-    ...formData,
-    carId: car._id,
-    carName: car.name,
-    carNumber: car.registrationNumber,
-    pickupDateTime: `${formData.pickupDate} ${formData.pickupTime}`,
-    returnDateTime: `${formData.returnDate} ${formData.returnTime}`,
-    totalDays,
-    totalAmount,
+    const bookingData = {
+      ...formData,
+      carId: car._id,
+      carName: car.name,
+      carNumber: car.registrationNumber,
+      pickupDateTime: `${formData.pickupDate} ${formData.pickupTime}`,
+      returnDateTime: `${formData.returnDate} ${formData.returnTime}`,
+      totalDays,
+      totalAmount,
+    };
+
+    try {
+      const res = await axios.post("/bookings/book", bookingData, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+
+      setTimeout(() => {
+        navigate("/thank-you", {
+          state: {
+            bookingId: res.data._id,
+            carName: res.data.carName,
+            totalAmount: res.data.totalAmount,
+          },
+        });
+      }, 2000);
+    } catch (err) {
+      alert("Booking failed.");
+      console.log(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  try {
-    const res = await axios.post("/bookings/book", bookingData, {
-      headers: { Authorization: `Bearer ${userToken}` },
-    });
-
-    // ✅ Wait 2 seconds before navigating
-    setTimeout(() => {
-      navigate("/thank-you", {
-        state: {
-          bookingId: res.data._id,
-          carName: res.data.carName,
-          totalAmount: res.data.totalAmount,
-        },
-      });
-    }, 2000);
-  } catch (err) {
-    alert("Booking failed.");
-    console.log(err);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  const todayStr = new Date().toISOString().split("T")[0];
 
   if (isLoading)
     return <div className="text-center mt-5">Loading car details...</div>;
@@ -326,6 +338,7 @@ const handleSubmit = async (e) => {
                   value={formData.pickupDate}
                   onChange={handleChange}
                   required
+                  min={todayStr}
                 />
                 <input
                   type="time"
@@ -345,6 +358,7 @@ const handleSubmit = async (e) => {
                   value={formData.returnDate}
                   onChange={handleChange}
                   required
+                  min={formData.pickupDate || todayStr}
                 />
                 <input
                   type="time"

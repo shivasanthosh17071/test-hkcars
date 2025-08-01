@@ -127,19 +127,22 @@ const Account = () => {
     }
   };
 
-  return (
-    <div className="container mt-4">
-      <div className="text-center mb-4">
-        <h3>
-          Welcome, <span className="text-primary">{userData.fullName}</span>
-        </h3>
-        <p className="text-muted small">Joined on: {userData.joinDate}</p>
-      </div>
+ return (
+  <div className="container mt-5">
+    <div className="text-center mb-4">
+      <h3 className="fw-semibold">
+        Welcome, <span className="text-success">{userData.fullName}</span>
+      </h3>
+      <p className="text-muted small">Joined on: {userData.joinDate}</p>
+    </div>
 
-      <ul className="nav nav-tabs justify-content-center mb-4">
+    <div className="d-flex justify-content-center mb-4">
+      <ul className="nav nav-pills gap-3 bg-white px-3 py-2 rounded-4 shadow-sm">
         <li className="nav-item">
           <button
-            className={`nav-link ${activeTab === "details" ? "active fw-bold text-dark" : ""}`}
+            className={`nav-link px-4 py-2 rounded-pill ${
+              activeTab === "details" ? "active text-white bg-primary" : "text-dark"
+            }`}
             onClick={() => handleTabChange("details")}
           >
             <Info size={16} className="me-1" />
@@ -148,7 +151,9 @@ const Account = () => {
         </li>
         <li className="nav-item">
           <button
-            className={`nav-link ${activeTab === "update" ? "active fw-bold text-dark" : ""}`}
+            className={`nav-link px-4 py-2 rounded-pill ${
+              activeTab === "update" ? "active text-white bg-primary" : "text-dark"
+            }`}
             onClick={() => handleTabChange("update")}
           >
             <User size={16} className="me-1" />
@@ -157,7 +162,9 @@ const Account = () => {
         </li>
         <li className="nav-item">
           <button
-            className={`nav-link ${activeTab === "bookings" ? "active fw-bold text-dark" : ""}`}
+            className={`nav-link px-4 py-2 rounded-pill ${
+              activeTab === "bookings" ? "active text-white bg-primary" : "text-dark"
+            }`}
             onClick={() => handleTabChange("bookings")}
           >
             <ClipboardList size={16} className="me-1" />
@@ -165,113 +172,112 @@ const Account = () => {
           </button>
         </li>
       </ul>
+    </div>
 
-      <div className="card border-0 shadow-sm p-4 rounded-4 bg-light">
-        {activeTab === "details" && (
-          <div>
-            <h5 className="mb-3 text-primary">Account Details</h5>
+    <div className="card border-0 shadow-sm p-4 rounded-4 bg-light">
+      {activeTab === "details" && (
+        <div>
+          <h5 className="mb-4 text-success fw-semibold">Account Details</h5>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <p><strong className="text-muted">User ID:</strong> <br />{userData._id}</p>
+              <p><strong className="text-muted">Full Name:</strong> <br />{userData.fullName}</p>
+            </div>
+            <div className="col-md-6 mb-3">
+              <p><strong className="text-muted">Mobile Number:</strong> <br />{userData.phone}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "update" && (
+        <div>
+          <h5 className="mb-4 text-primary fw-semibold">Update Profile</h5>
+          <div className="mb-3">
+            <label className="form-label fw-semibold text-muted">Full Name</label>
+            <input
+              name="fullName"
+              type="text"
+              className="form-control rounded-3"
+              value={formData.fullName}
+              onChange={handleFormChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-semibold text-muted">Phone</label>
+            <input
+              name="phone"
+              type="text"
+              className="form-control rounded-3"
+              value={formData.phone}
+              onChange={handleFormChange}
+            />
+          </div>
+          <Button variant="primary" onClick={handleSaveChanges}>
+            Save Changes
+          </Button>
+        </div>
+      )}
+
+      {activeTab === "bookings" && (
+        <div>
+          <h5 className="mb-4 text-primary fw-semibold text-center">My Bookings</h5>
+          {bookings.length === 0 ? (
+            <p className="text-center text-muted">No bookings found.</p>
+          ) : (
             <div className="row">
-              <div className="col-md-6">
-                <p><strong>User ID:</strong> {userData._id}</p>
-                <p><strong>Full Name:</strong> {userData.fullName}</p>
-              </div>
-              <div className="col-md-6">
-                <p><strong>Mobile Number:</strong> {userData.phone}</p>
-              </div>
-            </div>
-          </div>
-        )}
+              {bookings.map((b) => (
+                <div key={b._id} className="col-md-6 mb-4">
+                  <div className="card h-100 border-0 shadow rounded-4">
+                    <div className="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                      <h6 className="mb-0">{b.carName}</h6>
+                      <span className={`badge bg-${getStatusColor(b.status)}`}>{b.status}</span>
+                    </div>
+                    <div className="card-body small">
+                      <h6 className="text-muted fw-semibold mb-2">Booking Info</h6>
+                      <p><strong>ID:</strong> {b._id}</p>
+                      <p><strong>Pickup:</strong> {new Date(b.pickupDateTime).toLocaleString()}</p>
+                      <p><strong>Return:</strong> {new Date(b.returnDateTime).toLocaleString()}</p>
+                      <p><strong>Days:</strong> {b.totalDays}</p>
 
-        {activeTab === "update" && (
-          <div>
-            <h5 className="mb-3 text-primary">Update Profile</h5>
-            <div className="mb-3">
-              <label className="form-label">Full Name</label>
-              <input
-                name="fullName"
-                type="text"
-                className="form-control"
-                value={formData.fullName}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Phone</label>
-              <input
-                name="phone"
-                type="text"
-                className="form-control"
-                value={formData.phone}
-                onChange={handleFormChange}
-              />
-            </div>
-            <Button variant="primary" onClick={handleSaveChanges}>
-              Save Changes
-            </Button>
-          </div>
-        )}
+                      <hr />
 
-        {activeTab === "bookings" && (
-          <div>
-            <h5 className="mb-4 text-center text-primary">My Bookings</h5>
-            {bookings.length === 0 ? (
-              <p className="text-center text-muted">No bookings found.</p>
-            ) : (
-              <div className="row">
-                {bookings.map((b) => (
-                  <div key={b._id} className="col-md-6 mb-4">
-                    <div className="card h-100 shadow-sm border-0">
-                      <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom">
-                        <strong>{b.carName}</strong>
-                        <span className={`badge bg-${getStatusColor(b.status)}`}>
-                          {b.status}
-                        </span>
-                      </div>
-                      <div className="card-body">
-                        <h6 className="text-muted mb-2">Booking Details</h6>
-                        <p><strong>Booking ID:</strong> {b._id}</p>
-                        <p><strong>Pickup:</strong> {new Date(b.pickupDateTime).toLocaleString()}</p>
-                        <p><strong>Return:</strong> {new Date(b.returnDateTime).toLocaleString()}</p>
-                        <p><strong>Total Days:</strong> {b.totalDays}</p>
+                      <h6 className="text-muted fw-semibold">Customer Info</h6>
+                      <p><strong>Name:</strong> {b.customerName}</p>
+                      <p><strong>Email:</strong> {b.customerEmail}</p>
+                      <p><strong>Phone:</strong> {b.customerPhone}</p>
+                      <p><strong>DOB:</strong> {b.dateOfBirth}</p>
 
-                        <hr />
+                      <hr />
 
-                        <h6 className="text-muted">Customer Info</h6>
-                        <p><strong>Name:</strong> {b.customerName}</p>
-                        <p><strong>Email:</strong> {b.customerEmail}</p>
-                        <p><strong>Phone:</strong> {b.customerPhone}</p>
-                        <p><strong>DOB:</strong> {b.dateOfBirth}</p>
+                      <h6 className="text-muted fw-semibold">License</h6>
+                      <p><strong>No.:</strong> {b.driverLicenseNumber}</p>
+                      <p><strong>Issued State:</strong> {b.dlIssuedState}</p>
+                      <p><strong>Original Docs:</strong> {b.originalDocumentsSubmitted}</p>
+                      <p><strong>Purpose:</strong> {b.purpose}</p>
+                      <p><strong>Notes:</strong> {b.notes}</p>
 
-                        <hr />
+                      <hr />
 
-                        <h6 className="text-muted">License Info</h6>
-                        <p><strong>License:</strong> {b.driverLicenseNumber}</p>
-                        <p><strong>Issued State:</strong> {b.dlIssuedState}</p>
-                        <p><strong>Original Docs:</strong> {b.originalDocumentsSubmitted}</p>
-                        <p><strong>Purpose:</strong> {b.purpose}</p>
-                        <p><strong>Notes:</strong> {b.notes}</p>
+                      <h6 className="text-muted fw-semibold">Address</h6>
+                      <p>{b.address}</p>
+                      <p>{b.city}, {b.state}, {b.country} - {b.pinCode}</p>
 
-                        <hr />
-
-                        <h6 className="text-muted">Address</h6>
-                        <p>{b.address}</p>
-                        <p>
-                          {b.city}, {b.state}, {b.country} - {b.pinCode}
-                        </p>
-                        <p className="small text-muted mt-3 mb-0">
-                          Booked On: {new Date(b.createdAt).toLocaleString()}
-                        </p>
-                      </div>
+                      <p className="small text-muted text-end mt-3 mb-0">
+                        Booked on: {new Date(b.createdAt).toLocaleString()}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Account;

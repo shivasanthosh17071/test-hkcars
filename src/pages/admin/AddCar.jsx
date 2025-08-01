@@ -9,6 +9,12 @@ const AddCar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("adminToken");
 
+  // Redirect if token is missing
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
   const [formData, setFormData] = useState({
     name: "",
     brand: "",
