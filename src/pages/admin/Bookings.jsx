@@ -22,7 +22,7 @@ const Bookings = () => {
   const [filters, setFilters] = useState({
     search: "",
     status: "All",
-    sort: "",
+    sort: "latest",
   });
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);

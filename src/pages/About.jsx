@@ -20,7 +20,7 @@ const About = () => {
       {/* Hero Section */}
       <section className="py-5 text-white" style={{ background: "linear-gradient(135deg, var(--primary-color), var(--primary-light))" }}>
         <div className="container text-center">
-          <h1 className="display-4 fw-bold mb-3">HK Car Rentals</h1>
+          <h1 className="display-4 fw-bold mb-3">HK Self Drive Cars</h1>
           <p className="lead mb-3 fst-italic">
             "Unlock the freedom to explore. Rent a car and embark on your journey."<br />
             "Drive the experience. Your adventure begins with a rental car."
@@ -34,14 +34,14 @@ const About = () => {
         <div className="container">
           <h2 className="fw-bold mb-4">Company Overview</h2>
           <p>
-            <strong>HK Car Rentals</strong> is one of the best self-drive car rental services in Hyderabad,
+            <strong>HK Self Drive Cars</strong> is one of the best self-drive car rental services in Hyderabad,
             offering a wide selection of well-maintained vehicles for local and outstation travel.
             Whether you're planning a short city ride or a long road trip, our fleet includes hatchbacks,
             sedans, and SUVs to match your needs and budget.
           </p>
           <p>
             What makes us unique is our focus on <strong>customer convenience</strong> — with simple online booking,
-            affordable pricing, 24/7 support, and flexible rental options. At HK Car Rentals,
+            affordable pricing, 24/7 support, and flexible rental options. At HK Self Drive Cars,
             we don’t just rent cars — we deliver freedom, flexibility, and a great travel experience.
           </p>
         </div>
@@ -98,12 +98,12 @@ const About = () => {
               </div>
               <div>
                 <h5 className="mb-1">Tharun</h5>
-                <p className="mb-2 text-muted">Founder, HK Car Rentals</p>
+                <p className="mb-2 text-muted">Founder, HK Self Drive Cars</p>
                 <p className="mb-0">
-                  Tharun started HK Car Rentals with a clear vision — to offer safe, flexible,
+                  Tharun started HK Self Drive Cars with a clear vision — to offer safe, flexible,
                   and budget-friendly travel options to people who want to explore on their own.
                   With a strong background in customer service and a passion for mobility,
-                  he has built HK Car Rentals into a brand known for trust and quality.
+                  he has built HK Self Drive Cars into a brand known for trust and quality.
                 </p>
               </div>
             </div>

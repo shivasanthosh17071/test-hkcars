@@ -16,30 +16,22 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Redirect if token is missing
   useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
+    if (!token) navigate("/");
   }, [token, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [carRes, bookingRes] = await Promise.all([
-          axios.get("/cars", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("/bookings", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axios.get("/cars", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("/bookings", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
-
         setCars(carRes.data);
         setBookings(bookingRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
-        if (err.response?.status === 401 || err.response?.status === 403) {
+        if ([401, 403].includes(err.response?.status)) {
           localStorage.removeItem("adminToken");
           navigate("/");
         }
@@ -47,33 +39,17 @@ const AdminDashboard = () => {
         setIsLoading(false);
       }
     };
-
-    if (token) {
-      fetchData();
-    }
+    if (token) fetchData();
   }, [token, navigate]);
 
   const handleToggleAvailability = async (carId) => {
     if (window.confirm("Change availability status?")) {
       try {
-        await axios.patch(
-          `/cars/${carId}/toggle`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setIsLoading(true);
-        // Re-fetch data
-        const res = await axios.get("/cars", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.patch(`/cars/${carId}/toggle`, {}, { headers: { Authorization: `Bearer ${token}` } });
+        const res = await axios.get("/cars", { headers: { Authorization: `Bearer ${token}` } });
         setCars(res.data);
-        setIsLoading(false);
       } catch (err) {
-        console.error(err);
         alert("Failed to update car status.");
-        setIsLoading(false);
       }
     }
   };
@@ -81,12 +57,9 @@ const AdminDashboard = () => {
   const handleDeleteCar = async (carId) => {
     if (window.confirm("Delete this car permanently?")) {
       try {
-        await axios.delete(`/cars/${carId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(`/cars/${carId}`, { headers: { Authorization: `Bearer ${token}` } });
         setCars((prev) => prev.filter((car) => car._id !== carId));
       } catch (err) {
-        console.error(err);
         alert("Failed to delete car.");
       }
     }
@@ -108,66 +81,43 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className=" m-2 m-md-4 py-4 fade-in min-vh-100">
+    <div className="container py-4 fade-in">
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 border-bottom pb-3">
         <div>
-          <h2>Admin Dashboard</h2>
-          <p className="text-muted mb-0">Manage your car rental business</p>
+          <h2 className="fw-bold mb-0">Admin Dashboard</h2>
+          <small className="text-muted">Manage your self-drive car rental system</small>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 mt-3 mt-md-0">
           <Link to="/admin/add-car" className="btn btn-primary">
             <Plus size={16} className="me-2" />
-            Add New Car
+            Add Car
           </Link>
-          <button
-            className="btn btn-outline-danger"
-            onClick={() => {
-              if (window.confirm("Are you sure you want to logout?")) {
-                localStorage.removeItem("adminToken");
-                navigate("/");
-              }
-            }}
-          >
+          <button className="btn btn-outline-danger" onClick={() => {
+            if (window.confirm("Are you sure you want to logout?")) {
+              localStorage.removeItem("adminToken");
+              navigate("/");
+            }
+          }}>
             Logout
           </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="row mb-5">
+      {/* Stats */}
+      <div className="row g-3 mb-4">
         {[
-          {
-            icon: <Car size={40} />,
-            value: stats.totalCars,
-            label: "Total Cars",
-            bg: "primary",
-          },
-          {
-            icon: <Car size={40} />,
-            value: stats.availableCars,
-            label: "Available Cars",
-            bg: "success",
-          },
-          {
-            icon: <Calendar size={40} />,
-            value: stats.totalBookings,
-            label: "Total Bookings",
-            bg: "info",
-          },
-          {
-            icon: <Users size={40} />,
-            value: stats.pendingBookings,
-            label: "Pending Bookings",
-            bg: "warning",
-          },
-        ].map(({ icon, value, label, bg }, i) => (
-          <div className="col-lg-3 col-md-6 mb-3" key={i}>
-            <div className={`card bg-${bg} text-white`}>
+          { icon: <Car size={32} />, value: stats.totalCars, label: "Total Cars", bg: "primary" },
+          { icon: <Car size={32} />, value: stats.availableCars, label: "Available Cars", bg: "success" },
+          { icon: <Calendar size={32} />, value: stats.totalBookings, label: "Total Bookings", bg: "info" },
+          { icon: <Users size={32} />, value: stats.pendingBookings, label: "Pending Bookings", bg: "warning" },
+        ].map(({ icon, value, label, bg }, idx) => (
+          <div className="col-sm-6 col-md-3" key={idx}>
+            <div className={`card shadow-sm border-0 bg-${bg} text-white`}>
               <div className="card-body d-flex align-items-center">
-                {icon}
+                <div>{icon}</div>
                 <div className="ms-3">
-                  <h3 className="mb-0">{value}</h3>
+                  <h4 className="mb-0">{value}</h4>
                   <small>{label}</small>
                 </div>
               </div>
@@ -177,37 +127,32 @@ const AdminDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="card mb-5">
-        <div className="card-header">
-          <h5 className="mb-0">Quick Actions</h5>
-        </div>
+      <div className="card shadow-sm mb-4">
+        <div className="card-header bg-light fw-bold">Quick Actions</div>
         <div className="card-body">
-          <div className="row">
-            <div className="col-md-3 mb-3">
-              <Link
-                to="/admin/add-car"
-                className="btn btn-outline-primary w-100"
-              >
+          <div className="row g-3">
+            <div className="col-md-3">
+              <Link to="/admin/add-car" className="btn btn-outline-primary w-100">
                 <Plus size={16} className="me-2" />
-                Add New Car
+                Add Car
               </Link>
             </div>
-            <div className="col-md-3 mb-3">
+            <div className="col-md-3">
               <Link to="/admin/bookings" className="btn btn-outline-info w-100">
                 <Calendar size={16} className="me-2" />
                 View Bookings
               </Link>
             </div>
-            <div className="col-md-3 mb-3">
+            <div className="col-md-3">
               <button className="btn btn-outline-success w-100">
                 <Eye size={16} className="me-2" />
-                View Reports
+                Reports
               </button>
             </div>
-            <div className="col-md-3 mb-3">
-              <button className="btn btn-outline-secondary w-100">
+            <div className="col-md-3">
+              <button className="btn btn-outline-dark w-100">
                 <Users size={16} className="me-2" />
-                Customer List
+                Customers
               </button>
             </div>
           </div>
@@ -215,20 +160,20 @@ const AdminDashboard = () => {
       </div>
 
       {/* Manage Cars */}
-      <div className="card">
-        <div className="card-header d-flex justify-content-between align-items-center">
+      <div className="card shadow-sm mb-4">
+        <div className="card-header bg-light d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Manage Cars</h5>
-          <span className="badge bg-secondary">{cars.length} cars</span>
+          <span className="badge bg-secondary">{cars.length} Cars</span>
         </div>
         <div className="card-body">
           {cars.length === 0 ? (
             <div className="text-center py-5">
               <Car size={48} className="text-muted mb-3" />
-              <h5>No cars available</h5>
-              <p className="text-muted">Add your first car to get started.</p>
-              <Link to="/admin/add-car" className="btn btn-primary">
+              <h5>No Cars Found</h5>
+              <p className="text-muted">Start by adding a new car.</p>
+              <Link to="/admin/add-car" className="btn btn-primary mt-2">
                 <Plus size={16} className="me-2" />
-                Add New Car
+                Add Car
               </Link>
             </div>
           ) : (
@@ -250,19 +195,14 @@ const AdminDashboard = () => {
 
       {/* Recent Bookings */}
       {bookings.length > 0 && (
-        <div className="card mt-4">
-          <div className="card-header d-flex justify-content-between align-items-center">
+        <div className="card shadow-sm mb-5">
+          <div className="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Recent Bookings</h5>
-            <Link
-              to="/admin/bookings"
-              className="btn btn-sm btn-outline-primary"
-            >
-              View All
-            </Link>
+            <Link to="/admin/bookings" className="btn btn-sm btn-outline-primary">View All</Link>
           </div>
           <div className="card-body table-responsive">
-            <table className="table table-hover">
-              <thead>
+            <table className="table table-bordered table-hover">
+              <thead className="table-light">
                 <tr>
                   <th>Booking ID</th>
                   <th>Customer</th>
@@ -280,17 +220,11 @@ const AdminDashboard = () => {
                     <td>{booking.carName}</td>
                     <td>{booking.pickupDate}</td>
                     <td>
-                      <span
-                        className={`badge ${
-                          booking.status === "Confirmed"
-                            ? "bg-success"
-                            : booking.status === "Pending"
-                            ? "bg-warning"
-                            : booking.status === "Completed"
-                            ? "bg-info"
-                            : "bg-danger"
-                        }`}
-                      >
+                      <span className={`badge 
+                        ${booking.status === "Confirmed" ? "bg-success" :
+                          booking.status === "Pending" ? "bg-warning" :
+                          booking.status === "Completed" ? "bg-info" :
+                          "bg-danger"}`}>
                         {booking.status}
                       </span>
                     </td>

@@ -65,7 +65,7 @@ Message: ${formData.message}`;
       {/* Hero / Overview */}
       <section className="bg-dark text-white py-5">
         <div className="container text-center">
-          <h1 className="display-4 fw-bold mb-2 text-light" >HK Car Rentals</h1>
+          <h1 className="display-4 fw-bold mb-2 text-light" >HK Self Drive Cars</h1>
           <p className="lead mb-2">
             "Unlock the freedom to explore. Rent a car and embark on your journey."
           </p>
@@ -233,9 +233,9 @@ Message: ${formData.message}`;
           <div className="row mt-5">
             <div className="col-md-12">
               <div className="card shadow-sm p-4">
-                <h4 className="mb-3">About HK Car Rentals</h4>
+                <h4 className="mb-3">About HK Self Drive Cars</h4>
                 <p>
-                  <strong>HK Car Rentals</strong> is one of the top-rated self-drive car rental services in Hyderabad,
+                  <strong>HK Self Drive Cars</strong> is one of the top-rated self-drive car rental services in Hyderabad,
                   founded in 2019 by <strong>Tharun</strong>. Our mission is to provide safe, flexible, and
                   budget-friendly travel options to customers who value independence.
                 </p>

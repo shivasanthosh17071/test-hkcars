@@ -14,7 +14,7 @@ const quotes = [
   "Boduppal to Araku Valley — make memories one smooth drive at a time.",
   "Charminar, Chilkur or the coast — our LB Nagar cars take you where maps end and memories begin.",
   "Rent from Vanastalipuram and experience Hyderabad like never before — comfortably and conveniently.",
-  "From Boduppal streets to Telangana retreats — drive the experience with HK Car Rentals.",
+  "From Boduppal streets to Telangana retreats — drive the experience with HK Self Drive Cars.",
 ];
 
 
@@ -86,6 +86,7 @@ const Navbar = () => {
     }, 9000);
     return () => clearInterval(interval);
   }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");

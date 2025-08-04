@@ -9,18 +9,17 @@ import {
   ClipboardList,
   MapPin,
   CheckCircle,
+  StickyNote,
 } from "lucide-react";
 
 const StepIndicator = ({ step }) => {
-  const steps = ["Details", "Address", "License", "Schedule", "Summary"];
+  const steps = ["Details", "Address", "License", "Schedule", "Notes", "Summary"];
   return (
     <div className="d-flex justify-content-between mb-4 px-1">
       {steps.map((s, index) => (
         <div key={index} className="text-center flex-fill">
           <div
-            className={`rounded-circle mx-auto mb-1 ${
-              step >= index ? "bg-primary" : "bg-light"
-            }`}
+            className={`rounded-circle mx-auto mb-1 ${step >= index ? "bg-success" : "bg-light"}`}
             style={{
               width: 32,
               height: 32,
@@ -31,12 +30,21 @@ const StepIndicator = ({ step }) => {
           >
             {index + 1}
           </div>
-          <small>{s}</small>
+          <div
+            style={{
+              fontSize: step === index ? "0.75rem" : "0.6rem",
+              color: step === index ? "black" : "#999",
+              fontWeight: step === index ? "500" : "normal",
+            }}
+          >
+            {s}
+          </div>
         </div>
       ))}
     </div>
   );
 };
+
 
 const BookCar = () => {
   const { id } = useParams();
@@ -107,8 +115,7 @@ const BookCar = () => {
     fetchCar();
   }, [id, userToken]);
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const totalDays = useMemo(() => {
     const start = new Date(`${formData.pickupDate}T${formData.pickupTime}`);
@@ -117,10 +124,7 @@ const BookCar = () => {
     return diff > 0 ? diff : 1;
   }, [formData]);
 
-  const totalAmount = useMemo(
-    () => car?.price * totalDays,
-    [car?.price, totalDays]
-  );
+  const totalAmount = useMemo(() => car?.price * totalDays, [car?.price, totalDays]);
 
   const isFutureDate = (dateStr) => {
     const today = new Date();
@@ -136,7 +140,11 @@ const BookCar = () => {
       case 1:
         return formData.address && formData.city && formData.state;
       case 2:
-        return formData.driverLicenseNumber && formData.dateOfBirth;
+        return (
+          formData.driverLicenseNumber &&
+          formData.dateOfBirth &&
+          formData.dlIssuedState
+        );
       case 3: {
         const pickup = new Date(`${formData.pickupDate}T${formData.pickupTime}`);
         const ret = new Date(`${formData.returnDate}T${formData.returnTime}`);
@@ -147,7 +155,10 @@ const BookCar = () => {
           formData.returnTime &&
           isFutureDate(formData.pickupDate) &&
           isFutureDate(formData.returnDate) &&
-          ret > pickup
+          ret > pickup &&
+          formData.purpose &&
+          formData.destination &&
+          formData.originalDocumentsSubmitted
         );
       }
       default:
@@ -156,8 +167,8 @@ const BookCar = () => {
   };
 
   const nextStep = () => {
-    if (!isCurrentStepValid()) return alert("Please complete this section with valid dates.");
-    setStep((prev) => Math.min(prev + 1, 4));
+    if (!isCurrentStepValid()) return alert("Please complete this section with valid details.");
+    setStep((prev) => Math.min(prev + 1, 5));
   };
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
@@ -190,7 +201,7 @@ const BookCar = () => {
             totalAmount: res.data.totalAmount,
           },
         });
-      }, 2000);
+      }, 3000);
     } catch (err) {
       alert("Booking failed.");
       console.log(err);
@@ -217,75 +228,26 @@ const BookCar = () => {
       <form onSubmit={handleSubmit}>
         {step === 0 && (
           <div className="card p-4 mb-3 border-0 shadow-sm">
-            <h5 className="mb-3">
-              <User className="me-2" /> Your Details
-            </h5>
-            <input
-              className="form-control mb-2"
-              name="customerName"
-              value={formData.customerName}
-              readOnly
-            />
-            <input
-              type="email"
-              className="form-control mb-2"
-              name="customerEmail"
-              value={formData.customerEmail}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
-            <input
-              className="form-control mb-2"
-              name="customerPhone"
-              value={formData.customerPhone}
-              readOnly
-            />
+            <h5 className="mb-3"><User className="me-2" /> Your Details</h5>
+            <input className="form-control mb-2" name="customerName" value={formData.customerName} readOnly />
+            <input type="email" className="form-control mb-2" name="customerEmail" value={formData.customerEmail} onChange={handleChange} required readOnly />
+            <input className="form-control mb-2" name="customerPhone" value={formData.customerPhone} readOnly />
           </div>
         )}
 
         {step === 1 && (
           <div className="card p-4 mb-3 border-0 shadow-sm">
-            <h5 className="mb-3">
-              <MapPin className="me-2" /> Address Info
-            </h5>
-            <textarea
-              className="form-control mb-2"
-              name="address"
-              placeholder="Full Address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
+            <h5 className="mb-3"><MapPin className="me-2" /> Address Info</h5>
+            <textarea className="form-control mb-2" name="address" placeholder="Full Address" value={formData.address} onChange={handleChange} required />
             <div className="row">
               <div className="col-md-4">
-                <input
-                  className="form-control mb-2"
-                  name="city"
-                  placeholder="City"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                />
+                <input className="form-control mb-2" name="city" placeholder="City" value={formData.city} onChange={handleChange} required />
               </div>
               <div className="col-md-4">
-                <input
-                  className="form-control mb-2"
-                  name="state"
-                  placeholder="State"
-                  value={formData.state}
-                  onChange={handleChange}
-                  required
-                />
+                <input className="form-control mb-2" name="state" placeholder="State" value={formData.state} onChange={handleChange} required />
               </div>
               <div className="col-md-4">
-                <input
-                  className="form-control mb-2"
-                  name="pinCode"
-                  placeholder="PIN Code"
-                  value={formData.pinCode}
-                  onChange={handleChange}
-                />
+                <input className="form-control mb-2" name="pinCode" placeholder="PIN Code" value={formData.pinCode} onChange={handleChange} required />
               </div>
             </div>
           </div>
@@ -293,153 +255,83 @@ const BookCar = () => {
 
         {step === 2 && (
           <div className="card p-4 mb-3 border-0 shadow-sm">
-            <h5 className="mb-3">
-              <ClipboardList className="me-2" /> License & ID
-            </h5>
-            <input
-              className="form-control mb-2"
-              type="date"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="form-control mb-2"
-              name="driverLicenseNumber"
-              placeholder="License Number"
-              value={formData.driverLicenseNumber}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="form-control mb-2"
-              name="dlIssuedState"
-              placeholder="DL Issued State"
-              value={formData.dlIssuedState}
-              onChange={handleChange}
-              required
-            />
+            <h5 className="mb-3"><ClipboardList className="me-2" /> License & ID</h5>
+            <label>Date of Birth</label>
+            <input className="form-control mb-2" type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required />
+            <label>License Number</label>
+            <input className="form-control mb-2" name="driverLicenseNumber" placeholder="License Number" value={formData.driverLicenseNumber} onChange={handleChange} required />
+            <label>DL Issued State</label>
+            <input className="form-control mb-2" name="dlIssuedState" placeholder="DL Issued State" value={formData.dlIssuedState} onChange={handleChange} required />
           </div>
         )}
 
         {step === 3 && (
           <div className="card p-4 mb-3 border-0 shadow-sm">
-            <h5 className="mb-3">
-              <Calendar className="me-2" /> Booking Schedule
-            </h5>
+            <h5 className="mb-3"><Calendar className="me-2" /> Booking Schedule</h5>
             <div className="row">
               <div className="col-md-6">
                 <label>Pickup Date & Time</label>
-                <input
-                  type="date"
-                  className="form-control mb-2"
-                  name="pickupDate"
-                  value={formData.pickupDate}
-                  onChange={handleChange}
-                  required
-                  min={todayStr}
-                />
-                <input
-                  type="time"
-                  className="form-control mb-2"
-                  name="pickupTime"
-                  value={formData.pickupTime}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="date" className="form-control mb-2" name="pickupDate" value={formData.pickupDate} onChange={handleChange} required min={todayStr} />
+                <input type="time" className="form-control mb-2" name="pickupTime" value={formData.pickupTime} onChange={handleChange} required />
               </div>
               <div className="col-md-6">
                 <label>Return Date & Time</label>
-                <input
-                  type="date"
-                  className="form-control mb-2"
-                  name="returnDate"
-                  value={formData.returnDate}
-                  onChange={handleChange}
-                  required
-                  min={formData.pickupDate || todayStr}
-                />
-                <input
-                  type="time"
-                  className="form-control mb-2"
-                  name="returnTime"
-                  value={formData.returnTime}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="date" className="form-control mb-2" name="returnDate" value={formData.returnDate} onChange={handleChange} required min={formData.pickupDate || todayStr} />
+                <input type="time" className="form-control mb-2" name="returnTime" value={formData.returnTime} onChange={handleChange} required />
               </div>
             </div>
-            <input
-              className="form-control mb-2"
-              name="purpose"
-              placeholder="Purpose"
-              value={formData.purpose}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="form-control mb-2"
-              name="destination"
-              placeholder="Destination"
-              value={formData.destination}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="form-control mb-2"
-              name="originalDocumentsSubmitted"
-              placeholder="Documents Submitted"
-              value={formData.originalDocumentsSubmitted}
-              onChange={handleChange}
-              required
-            />
+            <label>Purpose</label>
+            <input className="form-control mb-2" name="purpose" placeholder="Purpose" value={formData.purpose} onChange={handleChange} required />
+            <label>Destination</label>
+            <input className="form-control mb-2" name="destination" placeholder="Destination" value={formData.destination} onChange={handleChange} required />
+            <label>Documents Submitted</label>
+            <input className="form-control mb-2" name="originalDocumentsSubmitted" placeholder="Documents Submitted" value={formData.originalDocumentsSubmitted} onChange={handleChange} required />
+
+            <div className="bg-light rounded p-3 mt-3">
+              <p className="mb-1">Total Days: <strong>{totalDays}</strong></p>
+              <p className="mb-0">Total Amount: <strong>₹{totalAmount}</strong></p>
+            </div>
           </div>
         )}
 
         {step === 4 && (
           <div className="card p-4 mb-3 border-0 shadow-sm">
-            <h5 className="mb-3">
-              <CheckCircle className="me-2" /> Booking Summary
-            </h5>
+            <h5 className="mb-3"><StickyNote className="me-2" /> Additional Notes</h5>
+            <textarea
+              className="form-control"
+              name="notes"
+              placeholder="Any additional information or requests..."
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="card p-4 mb-3 border-0 shadow-sm">
+            <h5 className="mb-3"><CheckCircle className="me-2" /> Booking Summary</h5>
             <p>Car: <strong>{car.name}</strong></p>
             <p>Per Day Rate: ₹{car.price}</p>
             <p>Total Days: {totalDays}</p>
             <p><strong>Total Amount: ₹{totalAmount}</strong></p>
-            <textarea
-              className="form-control mt-2"
-              name="notes"
-              placeholder="Additional Notes"
-              value={formData.notes}
-              onChange={handleChange}
-            ></textarea>
+            {formData.notes && (
+              <p className="mt-2"><strong>Notes:</strong> {formData.notes}</p>
+            )}
           </div>
         )}
 
         <div className="d-flex justify-content-between mt-3">
           {step > 0 && (
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={prevStep}
-            >
+            <button type="button" className="btn btn-outline-secondary" onClick={prevStep}>
               ← Back
             </button>
           )}
-          {step < 4 ? (
-            <button
-              type="button"
-              className="btn btn-primary ms-auto"
-              onClick={nextStep}
-            >
+          {step < 5 ? (
+            <button type="button" className="btn btn-primary ms-auto" onClick={nextStep}>
               Next →
             </button>
           ) : (
-            <button
-              type="submit"
-              className="btn btn-success w-100"
-              disabled={isSubmitting}
-            >
+            <button type="submit" className="btn btn-success w-100" disabled={isSubmitting}>
               {isSubmitting ? "Booking..." : "Book Now"}
             </button>
           )}

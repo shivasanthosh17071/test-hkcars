@@ -122,9 +122,9 @@ export default function HeroCarousel() {
                 <Link to={slide.ctaLink} className="hero-btn-primary">
                   {slide.cta} <ArrowRight size={18} />
                 </Link>
-                <button className="hero-btn-secondary">
+                {/* <button className="hero-btn-secondary">
                   <Play size={18} /> Demo
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
